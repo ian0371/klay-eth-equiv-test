@@ -2,9 +2,9 @@ const { expect } = require("chai");
 const openseaConst = require('../opensea_const');
 
 async function hashCode(addr) {
-  const code = await hre.ethers.provider.getCode(addr);
+  const code = await ethers.provider.getCode(addr);
   const bytes = Buffer.from(code.substring(2), 'hex');
-  const hash = hre.ethers.utils.sha256(bytes);
+  const hash = ethers.utils.sha256(bytes);
   return hash;
 }
 
@@ -30,7 +30,11 @@ describe("Opensea contracts", function () {
   });
 
   it("deploy Seaport 1.1", async function () {
-    const hash = await hashCode(openseaConst.Seaport_1_1);
-    expect(hash).to.equal('0x692aa5085ef46fdca13c447bad24ebd61c3fcf6280883345bdd8fbff16d31d81');
+    const signer = new ethers.VoidSigner('', ethers.provider);
+    const abi = [
+      "function name() view returns (string)",
+    ];
+    const contract = new ethers.Contract(openseaConst.Seaport_1_1, abi, signer);
+    expect(await contract.name()).to.equal('Seaport');
   });
 });
