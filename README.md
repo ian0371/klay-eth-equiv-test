@@ -3,21 +3,13 @@
 
 1. Create `.env` by copying `.sample-env`. Fill only the networks to test:
 ```
-PRIVKEY_PRIVATE='~~~'
-PRIVKEY_BAOBAB='~~~'
-PRIVKEY_RINKEBY='~~~'
-PRIVKEY_ROPSTEN='~~~'
-INFURA_PROJECT_ID='~~~'
+PRIVKEY_PRIVATE='deadbeef'
+PRIVKEY_PRIVATE_RICH='1234abcd'
 ```
 
-2. Make a symlink from hardhat:
-```bash
-cd hardhat && ln -s ../.env
-```
+2. Configure `config.js` appropriately. You can change network in this file.
 
-3. Configure `config.js` appropriately. You can change network in this file.
-
-4. Download truffle
+3. Download truffle
 ```bash
 npm install -g truffle
 ```
@@ -126,7 +118,7 @@ Run following commands:
 ```bash
 cd hardhat
 npx hardhat faucet
-npx hardhat test
+npx hardhat test test/test.js
 ```
 
 ## How to increase base fee during above tests
@@ -142,9 +134,9 @@ cd hardhat && npx hardhat vt
 cd truffle && truffle migrate
 ```
 
-## EIP-155 test
+## Opensea test
 ```
 cd hardhat
-npx hardhat faucet
-npx hardhat opensea
+npx hardhat run scripts/deploy_opensea.js
+npx hardhat test test/opensea.js
 ```
