@@ -31,6 +31,6 @@ describe("Opensea contracts", function () {
 
   it("deploy Seaport 1.1", async function () {
     const hash = await hashCode(openseaConst.Seaport_1_1);
-    expect(hash).to.equal('0xb576eb61c2dfd35404f209ebe93f8371b9d2cb58f915730a4d4aca38368a98c6');
+    expect(hash).to.equal('0x692aa5085ef46fdca13c447bad24ebd61c3fcf6280883345bdd8fbff16d31d81');
   });
 });
