@@ -1,5 +1,5 @@
 /** @type import('hardhat/config').HardhatUserConfig */
-require('dotenv').config({path: '../.env'});
+require('dotenv').config({ path: '../.env' });
 const { config, network } = require('../config');
 const { Transaction } = require('@ethereumjs/tx');
 require("@nomiclabs/hardhat-ethers");
@@ -14,40 +14,41 @@ async function vt(to, value) {
 }
 
 task("accounts", "accounts")
-.setAction(async () => {
-  const accounts = await hre.ethers.getSigners();
-  for (const [i, account] of accounts.entries()) {
-    const balance = await account.getBalance();
-    console.log(`[${('00'+i.toString()).slice(-2)}] ${account.address}: ${(balance / 1e18).toString().padStart(8)}` );
-  }
-});
+  .setAction(async () => {
+    const accounts = await hre.ethers.getSigners();
+    for (const [i, account] of accounts.entries()) {
+      const balance = await account.getBalance();
+      console.log(`[${('00' + i.toString()).slice(-2)}] ${account.address}: ${(balance / 1e18).toString().padStart(8)}`);
+    }
+  });
 
 task("vt", "Infinite value transfer")
-.setAction(async () => {
-  while (true) {
-    tx = await vt('0x000000000000000000000000000000000000dead', '100');
-    console.log(`sent`, tx.hash);
-  }
-});
+  .setAction(async () => {
+    while (true) {
+      tx = await vt('0x000000000000000000000000000000000000dead', '100');
+      console.log(`sent`, tx.hash);
+    }
+  });
 
 task("decode", "decode raw tx")
-.setAction(async () => {
-  const tx = Transaction.fromRlpSerializedTx(openseaConst.DEPLOY_CREATE2_ADDRESS);
-  console.log(tx.toJSON());
-});
+  .setAction(async () => {
+    const tx = Transaction.fromRlpSerializedTx(openseaConst.DEPLOY_CREATE2_ADDRESS);
+    console.log(tx.toJSON());
+  });
 
 task("faucet", "faucet")
-.setAction(async () => {
-  const rich = new hre.ethers.Wallet(hre.network.config.rich, hre.ethers.provider);
-  const accounts = await hre.ethers.getSigners();
-  for (const account of accounts) {
-    await rich.sendTransaction({
-      to: account.address,
-      value: ethers.utils.parseEther("20000"),
-    });
-    console.log(`sent to ${account.address}`);
-  }
-});
+  .setAction(async () => {
+    const rich = new hre.ethers.Wallet(hre.network.config.rich, hre.ethers.provider);
+    console.log("rich:", rich.address);
+    const accounts = await hre.ethers.getSigners();
+    for (const account of accounts) {
+      await rich.sendTransaction({
+        to: account.address,
+        value: ethers.utils.parseEther("20000"),
+      });
+      console.log(`sent to ${account.address}`);
+    }
+  });
 
 module.exports = {
   solidity: "0.8.9",
@@ -79,20 +80,6 @@ module.exports = {
       rich: config.ethereum.rich,
       accounts: [
         config.ethereum.privKey,
-      ],
-    },
-    'rinkeby': {
-      url: config.rinkeby.rpcURL,
-      rich: config.rinkeby.rich,
-      accounts: [
-        config.rinkeby.privKey,
-      ],
-    },
-    'ropsten': {
-      url: config.ropsten.rpcURL,
-      rich: config.ropsten.rich,
-      accounts: [
-        config.ropsten.privKey,
       ],
     },
   },

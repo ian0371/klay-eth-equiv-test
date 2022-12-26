@@ -6,14 +6,14 @@ function findImports(p) {
     const pathPrefix = __dirname + '/node_modules/'
     const content = fs.readFileSync(pathPrefix + p).toString();
     return {
-      contents: content
+        contents: content
     };
 }
 
 // Compile contract
 const contractName = 'inc';
 const fileName = contractName + '.sol';
-const contractPath = path.resolve(__dirname, `./contracts/${fileName}` );
+const contractPath = path.resolve(__dirname, `./contracts/${fileName}`);
 const source = fs.readFileSync(contractPath, 'utf8');
 const input = {
     language: 'Solidity',
