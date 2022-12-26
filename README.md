@@ -60,6 +60,9 @@ mkdir truffle
 cd truffle
 truffle unbox metacoin
 cat > truffle-config.js << EOF
+const PrivateKeyProvider = require("@truffle/hdwallet-provider");
+const privKey = ["00000000000000000000000000000000000000000000000000000000cafebabe"];
+
 module.exports = {
   compilers: {
     solc: {
@@ -68,33 +71,26 @@ module.exports = {
     }
   },
   networks: {
-    development: {
-      host: "127.0.0.1",
+    private: {
+      provider: () => new PrivateKeyProvider(privKey, 'http://127.0.0.1:8551/'),
+      host: '127.0.0.1',
       port: 8551,
-      network_id: "*"
-    },
-    test: {
-      host: "127.0.0.1",
-      port: 8551,
-      network_id: "*"
+      network_id: '*',
     }
   },
 };
 EOF
 
-truffle deploy
-truffle migrate
+truffle deploy --network private
 
-truffle test ./test/TestMetaCoin.sol
-
-sed -i '' 's|accountTwo = .*|accountTwo = "0x000000000000000000000000000000000000dead"|g' test/metacoin.js
-truffle test ./test/metacoin.js
+# for gnu-sed. if mac sed, use `sed -i '' 's|....|g' ...`
+sed -i 's|accountTwo = .*|accountTwo = "0x000000000000000000000000000000000000dead"|g' test/metacoin.js
+truffle test ./test/metacoin.js --network private
 ```
 
 #### console test
 ```bash
-truffle migrate
-truffle console
+truffle console --network private
 truffle(development)> let instance = await MetaCoin.deployed()
 truffle(development)> let accounts = await web3.eth.getAccounts()
 truffle(development)> let balance = await instance.getBalance(accounts[0])
